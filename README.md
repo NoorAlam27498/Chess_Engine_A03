@@ -37,8 +37,21 @@ The system models chess as a two-player, zero-sum, deterministic, perfect-inform
 
 ---
 
+## 🏗️ Architecture
+
+The project follows a **Layered Architecture** with four distinct layers:
+
+| Layer | Description | Files |
+|-------|-------------|-------|
+| **Presentation Layer** | GUI, board rendering, user input | `gui/` |
+| **Application Layer** | Facade pattern, engine orchestration | `engine/chess_engine.py` |
+| **Business Logic Layer** | Search, evaluation, move ordering | `engine/search.py`, `engine/evaluation.py`, `engine/move_ordering.py` |
+| **Data Access Layer** | External libraries, assets | `python-chess`, `PyQt6`, `assets/` |
+
+---
+
 ## 📂 Project Structure
-Assignment3_AI/
+Chess_Engine_A03/
 │
 ├── main.py # Application entry point
 ├── README.md # This file
@@ -62,75 +75,59 @@ Assignment3_AI/
 ├── wp.svg, wr.svg, wn.svg, wb.svg, wq.svg, wk.svg
 └── bp.svg, br.svg, bn.svg, bb.svg, bq.svg, bk.svg
 
-text
-
 ---
 
 ## 💻 Installation Instructions
 
 ### Prerequisites
 
-Before installing, ensure you have the following:
+Before installing, ensure you have the following installed on your system:
 
 | Requirement | Minimum Version | Check Command |
-|-------------|----------------|---------------|
-| Python | 3.9 or higher | `python --version` |
-| pip | 20.0 or higher | `pip --version` |
-| Git (optional) | Any | `git --version` |
+|-------------|-----------------|---------------|
+| Python      | 3.9 or higher   |python --version|
+| pip         | 20.0 or higher  |pip --version  |
 
-### Step 1: Download the Project
+### Step 1: Clone the Repository
 
-**Option A: Clone with Git (Recommended)**
-```bash
-git clone https://github.com/YOUR_USERNAME/Assignment3_AI.git
-cd Assignment3_AI
-Option B: Download as ZIP
+```
+git clone https://github.com/NoorAlam27498/Chess_Engine_A03.git
+cd Chess_Engine_A03
 
-Download the ZIP file from your repository or LMS
 
-Extract the ZIP file to a folder
-
-Open terminal/command prompt in that folder
-
-Option C: Manual Copy
-Create the folder structure and copy all files manually.
-
-Step 2: Create Virtual Environment (Recommended)
+### Step 2: Create Virtual Environment (Recommended)
 Windows:
-
-bash
-python -m venv venv
-venv\Scripts\activate
-macOS / Linux:
-
-bash
 python3 -m venv venv
 source venv/bin/activate
-Step 3: Install Dependencies
-bash
+
+macOS / Linux:
+python3 -m venv venv
+source venv/bin/activate
+
+### Step 3: Install Required Libraries
 pip install -r requirements.txt
-This will install:
 
-PyQt6 (GUI framework)
+or
 
-python-chess (chess logic library)
+pip install PyQt6 python-chess
 
-Step 4: Verify Asset Files
-Ensure the following SVG files exist in assets/pieces/:
+### Step 4: Verify Asset Files
+Ensure the following SVG files exist in assets/pieces/ folder:
 
-White Pieces	Black Pieces
-wp.svg (pawn)	bp.svg (pawn)
-wr.svg (rook)	br.svg (rook)
-wn.svg (knight)	bn.svg (knight)
-wb.svg (bishop)	bb.svg (bishop)
-wq.svg (queen)	bq.svg (queen)
-wk.svg (king)	bk.svg (king)
+White Pieces	        Black Pieces
+wp.svg (white pawn)	bp.svg (black pawn)
+wr.svg (white rook)	br.svg (black rook)
+wn.svg (white knight)	bn.svg (black knight)
+wb.svg (white bishop)	bb.svg (black bishop)
+wq.svg (white queen)	bq.svg (black queen)
+wk.svg (white king)	bk.svg (black king)
+
 🚀 Execution Instructions
 Run the Application
 bash
 python main.py
-Expected Output
-Upon successful execution, you should see:
+What to Expect
+Upon successful execution, the following will appear:
 
 A maximized window with a chess board in the center
 
@@ -142,10 +139,10 @@ Status bar showing "White's Turn"
 
 Console Output (Background)
 text
-[INFO] Loading piece assets...
-[INFO] Assets loaded successfully: 12/12 pieces
-[INFO] Engine initialized: Alpha-Beta Search (Depth 4)
-[INFO] GUI started on main thread
+Loading piece assets...
+Assets loaded successfully: 12/12 pieces
+Engine initialized: Alpha-Beta Search (Depth 4)
+GUI started on main thread
 🎮 How to Play
 Game Rules
 White (Human) moves first
@@ -156,61 +153,51 @@ Standard chess rules apply (check, checkmate, stalemate, castling, en passant, p
 
 Mouse Controls
 Action	Method
-Select a piece	Left-click on your piece (White pieces only)
+Select a piece	Left-click on your piece (White pieces only on your turn)
 Move a piece	Left-click on a highlighted destination square
 Cancel selection	Click anywhere else or click the same piece again
 Promote a pawn	Dialog appears automatically when pawn reaches last rank
 Visual Indicators
 Indicator	Meaning
-🔲 Light gray square	Currently selected piece
-⚪ Small grey circle	Legal non-capture destination
-🔴 Red square	Legal capture destination
-Game Flow Example
+Light gray square	Currently selected piece
+Small grey circle	Legal non-capture destination
+Red square	Legal capture destination
+Game Flow
 text
-1. Player clicks on e2 pawn → Square highlights
-2. Player clicks on e4 → Pawn moves to e4
+1. Player clicks on a white piece → Square highlights
+2. Player clicks on a highlighted destination → Piece moves
 3. AI thinks for ~0.4 seconds
-4. AI responds with e7e5
+4. AI responds with its move
 5. Board updates automatically
-6. Continue until game ends
-⚙️ Configuration Options
+6. Continue until game ends (checkmate or draw)
+⚙️ Configuration
 Changing Search Depth
-Edit engine/search.py:
+The engine searches to depth 4 by default. To change this, edit engine/search.py:
 
 python
 class AlphaBetaSearch(SearchStrategy):
     def __init__(self, max_depth: int = 4, ...):  # Change 4 to desired depth
-Depth vs Performance Table
-Depth	Avg Nodes	Avg Time	Playing Strength
-2	~500	<0.05 sec	Very weak, misses tactics
-3	~1,200	~0.1 sec	Weak, sees simple threats
-4 (Default)	~4,000	~0.4 sec	Decent club player
-5	~35,000	~3.5 sec	Strong but slower
-6	~300,000	~30 sec	Very strong (impractical)
-Changing Heuristic Weights
-Edit engine/evaluation.py:
-
-python
-class HeuristicEvaluator(EvaluatorInterface):
-    def __init__(self):
-        self.mobility_weight: float = 0.1  # Increase for more aggressive play
-🧪 Testing
+Depth vs Performance
+Depth	Avg Time	Playing Strength
+2	<0.05 sec	Very weak
+3	~0.1 sec	Weak
+4	~0.4 sec	Decent club player (Default)
+5	~3.5 sec	Strong but slower
+🧪 Testing the Application
 Basic Functionality Test
 bash
 python main.py
-# Verify window opens
-# Verify all pieces are displayed
-# Verify you can click and move pieces
-# Verify AI responds after your move
-Edge Cases to Test
-Test Case	Expected Result
-Pawn promotion	Dialog appears, piece promotes correctly
-Castling	King and rook move together
-En passant	Pawn captures diagonally on passed pawn
-Checkmate	Game over dialog with winner
-Stalemate	Game over dialog with draw message
-Illegal move	Selection resets, no board change
-Sample Console Output
+Then verify:
+
+Window opens successfully
+
+All pieces are displayed correctly
+
+You can click and move pieces
+
+AI responds after your move
+
+Sample Console Output During Game
 text
 Selected: e2
 Moved: e2 -> e4
@@ -223,54 +210,21 @@ Moved: g1 -> f3
 Engine thinking...
 [Search] Evaluated 4251 nodes
 Engine moved: g8f6
+📊 Algorithm Description
+Search Algorithm: Minimax with Alpha-Beta Pruning
+Time Complexity (best case): O(b^(d/2)) where b ≈ 35, d = 4
 
-Selected: f1
-Moved: f1 -> c4
-Engine thinking...
-[Search] Evaluated 4012 nodes
-Engine moved: f8c5
-🔧 Troubleshooting
-Issue: "Missing file: assets/pieces/xx.svg"
-Solution: Ensure all 12 SVG files are present in the correct folder.
+Time Complexity (worst case): O(b^d)
 
-Issue: "ModuleNotFoundError: No module named PyQt6"
-Solution: Install missing dependency:
+Nodes evaluated per move: ~2,000 - 5,000
 
-bash
-pip install PyQt6
-Issue: "ModuleNotFoundError: No module named chess"
-Solution: Install missing dependency:
+Speedup factor: ~300x compared to naive minimax
 
-bash
-pip install python-chess
-Issue: Application freezes during AI move
-Explanation: This is normal as AI calculation is synchronous. Duration is ~0.4 seconds for depth 4.
+Heuristic Evaluation Function: f(s) = M(s) + P(s) + 0.1 × Mob(s)
+Component	Description
+M(s)	Material balance (Pawn=100, Knight=320, Bishop=330, Rook=500, Queen=900, King=20000)
+P(s)	Positional advantage from piece-square tables
+Mob(s)	Mobility (number of legal moves)
+📁 Repository Link
+GitHub Repository: https://github.com/NoorAlam27498/Chess_Engine_A03
 
-Issue: Black screen or pieces not rendering
-Solution: Check that SVG files are valid and not corrupted. Re-download assets if needed.
-
-Issue: Virtual environment not activating
-Windows:
-
-bash
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-macOS/Linux:
-
-bash
-chmod +x venv/bin/activate
-📊 Algorithm Performance Metrics
-Metric	Value
-Average nodes evaluated per move	2,000 - 5,000
-Average time per move (depth 4)	0.2 - 0.5 seconds
-Speedup from alpha-beta pruning	~300x
-Branching factor (effective)	~8-10 (from ~35)
-Memory usage	<50 MB
-📝 License
-This project was created for academic purposes as part of the Artificial Intelligence course at FAST National University of Computer and Emerging Sciences, Islamabad.
-
-🙏 Acknowledgments
-Resource	Purpose
-python-chess library	Board representation, move generation, rule validation
-PyQt6 framework	Graphical user interface
-Chess Programming Wiki	Piece-square tables, heuristic guidance
-SVG Pieces	Open-source chess piece assets

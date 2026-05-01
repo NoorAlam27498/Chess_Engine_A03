@@ -1,20 +1,8 @@
-
-```txt
 # ============================================================================
 # Chess Engine Dependencies
 # Project: Adversarial Search-Based Chess Engine
 # Course: AI Assignment 3
 # Date: May 2026
-# ============================================================================
-#
-# Installation command:
-#   pip install -r requirements.txt
-#
-# Virtual environment recommended:
-#   python -m venv venv
-#   source venv/bin/activate  (Linux/macOS)
-#   venv\Scripts\activate      (Windows)
-#
 # ============================================================================
 
 # GUI Framework - PyQt6
@@ -29,14 +17,11 @@ PyQt6-sip>=13.5.0
 python-chess>=1.10.0
 
 # ============================================================================
-# Optional Dependencies (Not Required for Current Implementation)
-# ============================================================================
-# numpy>=1.24.0  # For potential future performance optimizations
-# pytest>=7.0.0  # For running unit tests (if added later)
-
-# ============================================================================
-# Notes:
-# - The application runs with standard Python 3.9+ without additional libraries
-# - All SVG assets are included in the assets/pieces/ folder
-# - No external APIs or network connectivity required
+# Installation command:
+#   pip install -r requirements.txt
+#
+# Virtual environment recommended:
+#   python -m venv venv
+#   source venv/bin/activate  (Linux/macOS)
+#   venv\Scripts\activate      (Windows)
 # ============================================================================
